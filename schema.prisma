@@ -1,0 +1,31 @@
+datasource db {
+    provider = "sqlite"
+    url      = "file:dev.db"
+}
+
+generator db {
+    provider = "go run github.com/prisma/prisma-client-go"
+}
+
+model User {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+    password  String
+    email     String
+    isAdmin   Boolean @default(false)
+    servers   Server[]
+}
+
+model Server {
+    id        String   @id @default(cuid())
+    ownerId   String
+    owner     User    @relation(references: [id], fields: [ownerId])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+    status Bytes
+    cpu Int @default(100)
+    ram Int @default(1024)
+}
