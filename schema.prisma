@@ -14,18 +14,18 @@ model User {
     name      String
     password  String
     email     String
-    isAdmin   Boolean @default(false)
+    isAdmin   Boolean  @default(false)
     servers   Server[]
 }
 
 model Server {
     id        String   @id @default(cuid())
     ownerId   String
-    owner     User    @relation(references: [id], fields: [ownerId])
+    owner     User     @relation(references: [id], fields: [ownerId])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     name      String
-    status Bytes
-    cpu Int @default(100)
-    ram Int @default(1024)
+    status    Int
+    cpu       Int      @default(100)
+    ram       Int      @default(1024)
 }

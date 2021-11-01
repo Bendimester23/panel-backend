@@ -36,6 +36,7 @@ func main() {
 
 	router.InitAuth(r.Group("/auth"))
 	router.InitUser(r.Group("/user"))
+	router.InitServer(r.Group("/server"))
 
 	defer db.Disconnect()
 

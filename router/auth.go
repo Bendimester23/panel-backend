@@ -123,7 +123,24 @@ func InitAuth(r *gin.RouterGroup) {
 		if !c.MustGet("auth").(bool) {
 			return
 		}
-		token, err := newToken(c.GetString("user_id"), c.GetBool("is_admin"))
+
+		user, err := db.DB.User.FindFirst(
+			db.User.ID.Equals(c.GetString("user_id")),
+		).Exec(ctx)
+
+		if err != nil {
+			if errors.Is(err, db.ErrNotFound) {
+				c.JSON(404, gin.H{
+					"error": "user not found",
+				})
+				return
+			}
+			c.JSON(500, gin.H{
+				"error": "db error",
+			})
+		}
+
+		token, err := newToken(c.GetString("user_id"), user.IsAdmin)
 
 		if handleError(err, c, "token creation error") {
 			return
